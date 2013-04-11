@@ -49,35 +49,36 @@ abstract class TweetSet {
    */
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet
 
-  /**
-   * Returns a new `TweetSet` that is the union of `TweetSet`s `this` and `that`.
-   *
-   * Question: Should we implment this method here, or should it remain abstract
-   * and be implemented in the subclasses?
-   */
-   def union(that: TweetSet): TweetSet = ???
+	/**
+	 * Returns a new `TweetSet` that is the union of `TweetSet`s `this` and `that`.
+	 *
+	 * Question: Should we implment this method here, or should it remain abstract
+	 * and be implemented in the subclasses?
+	 */
+ 	def union(that: TweetSet): TweetSet
 
-  /**
-   * Returns the tweet from this set which has the smallest retweet count.
-   *
-   * Calling `mostRetweeted` on an empty set should throw an exception of
-   * type `java.util.NoSuchElementException`.
-   *
-   * Question: Should we implment this method here, or should it remain abstract
-   * and be implemented in the subclasses?
-   */
-  def mostRetweeted: Tweet = ???
+	/**
+	 * Returns the tweet from this set which has the smallest retweet count.
+	 *
+	 * Calling `mostRetweeted` on an empty set should throw an exception of
+	 * type `java.util.NoSuchElementException`.
+	 *
+	 * Question: Should we implment this method here, or should it remain abstract
+	 * and be implemented in the subclasses?
+	 */
+	def mostRetweeted: Tweet
 
-  /**
-   * Returns a list containing all tweets of this set, sorted by retweet count
-   * in descending order. In other words, the head of the resulting list should
-   * have the highest retweet count.
-   *
-   * Hint: the method `remove` on TweetSet will be very useful.
-   * Question: Should we implment this method here, or should it remain abstract
-   * and be implemented in the subclasses?
-   */
-  def descendingByRetweet: TweetList = ???
+	def empty: Boolean
+	/**
+	 * Returns a list containing all tweets of this set, sorted by retweet count
+	 * in descending order. In other words, the head of the resulting list should
+	 * have the highest retweet count.
+	 *
+	 * Hint: the method `remove` on TweetSet will be very useful.
+	 * Question: Should we implment this method here, or should it remain abstract
+	 * and be implemented in the subclasses?
+	 */
+	def descendingByRetweet: TweetList
 
 
   /**
@@ -112,7 +113,13 @@ class Empty extends TweetSet {
 
 	def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = acc
 
+ 	def union(that: TweetSet): TweetSet = that
 
+	def mostRetweeted: Tweet = throw new NoSuchElementException
+
+	def empty: Boolean = true
+
+	def descendingByRetweet: TweetList = Nil
   /**
    * The following methods are already implemented
    */
@@ -133,7 +140,31 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 		else left.filterAcc(p, right.filterAcc(p, acc))
 	}
 
+ 	def union(that: Empty): TweetSet = this
+	def union(that: TweetSet): TweetSet = {
+		def unionAcc(acc: TweetSet): TweetSet = {
+			(left union right union that).incl(elem)
+		}
+		unionAcc(new Empty)
+	}
 
+	def mostRetweeted: Tweet = {
+		def helper(max: Tweet): Tweet = {
+			if( !left.empty && left.mostRetweeted.retweets > max.retweets )
+				helper(left.mostRetweeted)
+			else if( !right.empty && right.mostRetweeted.retweets > max.retweets )
+				helper(right.mostRetweeted)
+			else
+				max
+		}
+		helper(elem)
+	}
+
+	def empty: Boolean = false
+
+	def descendingByRetweet: TweetList = {
+		new Cons(mostRetweeted, remove(mostRetweeted).descendingByRetweet)
+	}
   /**
    * The following methods are already implemented
    */
