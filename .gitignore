@@ -1,0 +1,3 @@
+*.class
+lib_managed/
+target/
