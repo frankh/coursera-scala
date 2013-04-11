@@ -142,10 +142,7 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 
  	def union(that: Empty): TweetSet = this
 	def union(that: TweetSet): TweetSet = {
-		def unionAcc(acc: TweetSet): TweetSet = {
-			(left union right union that).incl(elem)
-		}
-		unionAcc(new Empty)
+		(remove(elem) union that).incl(elem)
 	}
 
 	def mostRetweeted: Tweet = {
@@ -234,6 +231,8 @@ object GoogleVsApple {
 }
 
 object Main extends App {
+	TweetReader.allTweets foreach println
+
 	// Print the trending tweets
-	GoogleVsApple.trending foreach println
+//	GoogleVsApple.trending foreach println
 }
