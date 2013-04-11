@@ -211,16 +211,9 @@ object GoogleVsApple {
 	val google = List("android", "Android", "galaxy", "Galaxy", "nexus", "Nexus")
 	val apple = List("ios", "iOS", "iphone", "iPhone", "ipad", "iPad")
 
-	def containsOneOf(s: String, wl: List[String]): Boolean = {
-		if( wl.isEmpty )
-			false
-		else
-			s.contains(wl.head) || containsOneOf(s, wl.tail)
-	}
+	lazy val googleTweets: TweetSet = TweetReader.allTweets.filter(tw => google.exists(e => tw.text.contains(e)))
 
-	lazy val googleTweets: TweetSet = TweetReader.allTweets.filter(tw => containsOneOf(tw.text, google))
-
-	lazy val appleTweets: TweetSet = TweetReader.allTweets.filter(tw => containsOneOf(tw.text, apple))
+	lazy val appleTweets: TweetSet = TweetReader.allTweets.filter(tw => apple.exists(e => tw.text.contains(e)))
 
 	/**
 	 * A list of all tweets mentioning a keyword from either apple or google,
@@ -233,5 +226,5 @@ object Main extends App {
 	TweetReader.allTweets foreach println
 
 	// Print the trending tweets
-//	GoogleVsApple.trending foreach println
+	GoogleVsApple.trending foreach println
 }
