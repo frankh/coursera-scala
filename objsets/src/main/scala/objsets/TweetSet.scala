@@ -212,7 +212,10 @@ object GoogleVsApple {
 	val apple = List("ios", "iOS", "iphone", "iPhone", "ipad", "iPad")
 
 	def containsOneOf(s: String, wl: List[String]): Boolean = {
-		s.contains(wl.head) || containsOneOf(s, wl.tail)
+		if( wl.isEmpty )
+			false
+		else
+			s.contains(wl.head) || containsOneOf(s, wl.tail)
 	}
 
 	lazy val googleTweets: TweetSet = TweetReader.allTweets.filter(tw => containsOneOf(tw.text, google))
