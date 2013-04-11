@@ -145,10 +145,13 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 	}
 
 	def mostRetweeted: Tweet = {
-		if( !left.empty && left.mostRetweeted.retweets > elem.retweets )
-			left.mostRetweeted
-		else if( !right.empty && right.mostRetweeted.retweets > elem.retweets )
-			right.mostRetweeted
+		lazy val leftMost = left.mostRetweeted
+		lazy val rightMost = right.mostRetweeted
+		
+		if( !left.empty && leftMost.retweets > elem.retweets )
+			leftMost
+		else if( !right.empty && rightMost.retweets > elem.retweets )
+			rightMost
 		else
 			elem
 	}
@@ -223,7 +226,7 @@ object GoogleVsApple {
 }
 
 object Main extends App {
-	TweetReader.allTweets foreach println
+//	GoogleVsApple.googleTweets.union(GoogleVsApple.appleTweets) foreach println
 
 	// Print the trending tweets
 	GoogleVsApple.trending foreach println
