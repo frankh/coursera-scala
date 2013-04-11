@@ -144,12 +144,16 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 		(left union (right union that)).incl(elem)
 	}
 
+
 	def mostRetweeted: Tweet = {
 		lazy val leftMost = left.mostRetweeted
 		lazy val rightMost = right.mostRetweeted
-		
+
 		if( !left.empty && leftMost.retweets > elem.retweets )
-			leftMost
+			if( !right.empty && rightMost.retweets > leftMost.retweets )
+				rightMost
+			else
+				leftMost
 		else if( !right.empty && rightMost.retweets > elem.retweets )
 			rightMost
 		else
@@ -222,7 +226,7 @@ object GoogleVsApple {
 	 * A list of all tweets mentioning a keyword from either apple or google,
 	 * sorted by the number of retweets.
 	 */
-	lazy val trending: TweetList = (googleTweets union appleTweets).descendingByRetweet
+	lazy val trending: TweetList = (googleTweets.union(appleTweets)).descendingByRetweet
 }
 
 object Main extends App {
