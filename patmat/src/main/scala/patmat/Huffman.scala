@@ -83,16 +83,15 @@ object Huffman {
 			if( count.isEmpty )
 				count :+ (char, 1)
 			else count.head match {
-				case (char, num) => count.tail :+ (char, num+1)
-				case _ 					 => occus(char, count.tail) :+ count.head
+				case (char, num) => (char, num+1) :: count.tail
+				case _           => count.head :: occurs(char, count.tail)
 			}
 		}
-		if( chars.isEmpty() )
-			new List[(Char, Int)]
+		if( chars.isEmpty )
+			List[(Char, Int)]()
 		else
 			occurs(chars.head, times(chars.tail))
 	}
-
 	/**
 	 * Returns a list of `Leaf` nodes for a given frequency table `freqs`.
 	 *
