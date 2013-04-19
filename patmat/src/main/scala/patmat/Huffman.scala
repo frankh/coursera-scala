@@ -180,8 +180,8 @@ object Huffman {
 		def decodeHelp(sub_tree: CodeTree, bits: List[Bit]): List[Char] = {
 			if( bits.isEmpty ) List[Char]()
 			else sub_tree match {
-				case Leaf(char, weight) => char :: decode(tree, bits)
-				case Fork(left, right, chars, weight) => bits.head match {
+				case Leaf(char, _)           => char :: decode(tree, bits)
+				case Fork(left, right, _, _) => bits.head match {
 					case 0 => decodeHelp(left, bits.tail)
 					case 1 => decodeHelp(right, bits.tail)
 				}
@@ -220,10 +220,10 @@ object Huffman {
 		def encodeHelp(sub_tree: CodeTree, text: List[Char]): List[Bit] = {
 			if( text.isEmpty ) List[Bit]()
 			else sub_tree match {
-				case Leaf(char, weight) => encode(tree, text.tail)
-				case Fork(left, right, chars, weight) => 
-					if( left.contains(text.head) ) 0 :: encodeHelp(left, text.tail)
-					else 1 :: encodeHelp(left, text.tail)
+				case Leaf(_, _) => encode(tree, text)
+				case Fork(left, right, _, _) => 
+					if( chars(left).contains(text.head) ) 0 :: encodeHelp(left)(text.tail)
+					else                                  1 :: encodeHelp(right)(text.tail)
 			}
 		}
 		encodeHelp(tree, text)
