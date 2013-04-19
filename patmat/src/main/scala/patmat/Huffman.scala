@@ -152,7 +152,11 @@ object Huffman {
 	 *    the example invocation. Also define the return type of the `until` function.
 	 *  - try to find sensible parameter names for `xxx`, `yyy` and `zzz`.
 	 */
-	def until(xxx: ???, yyy: ???)(zzz: ???): ??? = ???
+	def until[T](test: (List[T]) => Boolean, 
+		           func: (List[T]) => List[T])(list: List[T]): List[T] = {
+		if( !test(list) ) list
+		else until(test, func)(func(list))
+	}
 
 	/**
 	 * This function creates a code tree which is optimal to encode the text `chars`.
@@ -160,8 +164,8 @@ object Huffman {
 	 * The parameter `chars` is an arbitrary text. This function extracts the character
 	 * frequencies from that text and creates a code tree based on them.
 	 */
-	def createCodeTree(chars: List[Char]): CodeTree = ???
-
+	def createCodeTree(chars: List[Char]): CodeTree = 
+		until(singleton, combine)(makeOrderedLeafList(chars))
 
 
 	// Part 3: Decoding
