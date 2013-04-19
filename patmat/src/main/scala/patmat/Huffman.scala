@@ -130,7 +130,9 @@ object Huffman {
 		val t1 = trees.head
 		val t2 = trees.tail.head
 
-		(Fork(t1, t2, t1.chars ::: t2.chars, t1.weight + t2.weight) :: trees.tail.tail).sortWith((a, b) => a.weight < b.weight)
+		var combined = Fork(t1, t2, chars(t1) ::: chars(t2), weight(t1) + weight(t2))
+
+		(combined :: trees.tail.tail).sortWith((a, b) => weight(a) < weight(b))
 	}
 
 	/**
