@@ -60,7 +60,11 @@ object Anagrams {
 
   /** Returns all the anagrams of a given word. */
   def wordAnagrams(word: Word): List[Word] = {
-    dictionaryByOccurrences.get(wordOccurrences(word)) match {
+    occWords(wordOccurrences(word))
+  }
+
+  def occWords(occ: Occurrences): List[Word] = {
+    dictionaryByOccurrences.get(occ) match {
       case Some(word) => word
       case None => List()
     }
@@ -162,14 +166,19 @@ object Anagrams {
     val occs = sentenceOccurrences(sentence)
 
     def occAnagrams(occurrences: Occurrences): List[Sentence] = {
-      (for( occ <- combinations(occurrences) ) yield {
-        (for( w <- dictionaryByOccurrences.get(occ) ) yield {
-          for( anag <- occAnagrams(subtract(occs, occ)) ) yield {
-            w :: anag
+      val res = (for( occ <- combinations(occurrences) if occ.length > 0 ) yield {
+        (for( w <- occWords(occ) ) yield {
+          if( occ == occs ) List(List(w))
+          else {
+            val test = (for( anag <- occAnagrams(subtract(occurrences, occ)) ) yield {
+              w :: anag
+            })
+            println(test)
+            test
           }
         }).flatten
       }).flatten
-
+      res.asInstanceOf[List[Sentence]]
     }
     occAnagrams(occs)
   }
