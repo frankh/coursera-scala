@@ -67,7 +67,7 @@ object Anagrams {
   }
 
   def unOccur(occurrences: Occurrences, ch: Char): Occurrences = {
-    var occs = for( (letter, count) <- occurrences ) yield 
+    val occs = for( (letter, count) <- occurrences ) yield 
       if( letter == ch ) (letter, count-1)
       else (letter, count)
 
@@ -96,7 +96,9 @@ object Anagrams {
    *  Note that the order of the occurrence list subsets does not matter -- the subsets
    *  in the example above could have been displayed in some other order.
    */
-  def combinations(occurrences: Occurrences): List[Occurrences] = ???
+  def combinations(occurrences: Occurrences): List[Occurrences] = {
+    occurrences :: (for( occ <- occurrences ) yield combinations(unOccur(occurrences, occ._1))).flatten
+  }
 
   /** Subtracts occurrence list `y` from occurrence list `x`.
    * 
