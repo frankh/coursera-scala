@@ -71,7 +71,7 @@ object Anagrams {
       if( letter == ch ) (letter, count-1)
       else (letter, count)
 
-    occs.filter((letter, count) => count > 0)
+    occs.filter((occ) => occ._2 > 0)
   }
   
   /** Returns the list of all subsets of the occurrence list.
@@ -96,9 +96,7 @@ object Anagrams {
    *  Note that the order of the occurrence list subsets does not matter -- the subsets
    *  in the example above could have been displayed in some other order.
    */
-  def combinations(occurrences: Occurrences): List[Occurrences] = {
-
-  }
+  def combinations(occurrences: Occurrences): List[Occurrences] = ???
 
   /** Subtracts occurrence list `y` from occurrence list `x`.
    * 
