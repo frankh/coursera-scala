@@ -65,6 +65,14 @@ object Anagrams {
       case None => throw new Exception	
     }
   }
+
+  def unOccur(occurrences: Occurrences, ch: Char): Occurrences = {
+    var occs = for( (letter, count) <- occurrences ) yield 
+      if( letter == ch ) (letter, count-1)
+      else (letter, count)
+
+    occs.filter((letter, count) => count > 0)
+  }
   
   /** Returns the list of all subsets of the occurrence list.
    *  This includes the occurrence itself, i.e. `List(('k', 1), ('o', 1))`
@@ -88,7 +96,9 @@ object Anagrams {
    *  Note that the order of the occurrence list subsets does not matter -- the subsets
    *  in the example above could have been displayed in some other order.
    */
-  def combinations(occurrences: Occurrences): List[Occurrences] = ???
+  def combinations(occurrences: Occurrences): List[Occurrences] = {
+
+  }
 
   /** Subtracts occurrence list `y` from occurrence list `x`.
    * 
