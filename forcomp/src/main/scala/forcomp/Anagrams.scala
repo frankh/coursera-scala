@@ -62,7 +62,7 @@ object Anagrams {
   def wordAnagrams(word: Word): List[Word] = {
     dictionaryByOccurrences.get(wordOccurrences(word)) match {
       case Some(word) => word
-      case None => throw new Exception	
+      case None => List()
     }
   }
 
@@ -97,7 +97,7 @@ object Anagrams {
    *  in the example above could have been displayed in some other order.
    */
   def combinations(occurrences: Occurrences): List[Occurrences] = {
-    occurrences :: (for( occ <- occurrences ) yield combinations(unOccur(occurrences, occ._1))).flatten
+    occurrences :: (for( occ <- occurrences ) yield combinations(unOccur(occurrences, occ._1))).flatten.distinct
   }
 
   /** Subtracts occurrence list `y` from occurrence list `x`.
@@ -110,7 +110,13 @@ object Anagrams {
    *  Note: the resulting value is an occurrence - meaning it is sorted
    *  and has no zero-entries.
    */
-  def subtract(x: Occurrences, y: Occurrences): Occurrences = ???
+  def subtract(x: Occurrences, y: Occurrences): Occurrences = {
+    if( y.length == 0 ) x
+    else {
+      val ch = y.head._1
+      subtract(unOccur(x, ch), unOccur(y, ch))
+    }
+  }
 
   /** Returns a list of all anagram sentences of the given sentence.
    *  
@@ -152,6 +158,20 @@ object Anagrams {
    *
    *  Note: There is only one anagram of an empty sentence.
    */
-  def sentenceAnagrams(sentence: Sentence): List[Sentence] = ???
+  def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
+    val occs = sentenceOccurrences(sentence)
+
+    def occAnagrams(occurrences: Occurrences): List[Sentence] = {
+      (for( occ <- combinations(occurrences) ) yield {
+        (for( w <- dictionaryByOccurrences.get(occ) ) yield {
+          for( anag <- occAnagrams(subtract(occs, occ)) ) yield {
+            w :: anag
+          }
+        }).flatten
+      }).flatten
+
+    }
+    occAnagrams(occs)
+  }
 
 }
