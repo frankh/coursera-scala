@@ -168,19 +168,19 @@ object Anagrams {
     def occAnagrams(occurrences: Occurrences): List[Sentence] = {
       val res = (for( occ <- combinations(occurrences) if occ.length > 0 ) yield {
         (for( w <- occWords(occ) ) yield {
-          if( occ == occs ) List(List(w))
+          if( subtract(occurrences, occ).length == 0 ) List(List(w))
           else {
             val test = (for( anag <- occAnagrams(subtract(occurrences, occ)) ) yield {
               w :: anag
             })
-            println(test)
             test
           }
         }).flatten
       }).flatten
       res.asInstanceOf[List[Sentence]]
     }
-    occAnagrams(occs)
+    if( sentence.length == 0 ) List(List())
+    else occAnagrams(occs)
   }
 
 }
