@@ -138,7 +138,7 @@ trait GameDef {
         (left, Left),
         (right, Right),
         (up, Up),
-        (down, Down),
+        (down, Down)
       )
 
     /**
